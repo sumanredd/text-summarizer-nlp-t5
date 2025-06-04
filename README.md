@@ -1,58 +1,28 @@
-pip install googletrans==4.0.0-rc1
+# Text Summarizer using T5 Transformer
 
-import spacy
-from spacy.lang.en.stop_words import STOP_WORDS
-from string import punctuation
-from heapq import nlargest
-from googletrans import Translator
+## 🔍 Overview
+This project demonstrates how to perform text summarization using the T5 Transformer model. It uses Hugging Face Transformers to create short summaries of long input text using deep learning.
 
-# Load the Spacy model and text
-stopwords = list(STOP_WORDS)
-nlp = spacy.load('en_core_web_sm')
-text = input("Enter Text :-")
-doc = nlp(text)
-tokens = [token.text for token in doc]
-punctuation = punctuation + '\n'
+## 🧠 Model Used
+- T5-small from Hugging Face
 
-# Word Frequencies
-word_frequencies = {}
-for word in doc:
-    if word.text.lower() not in stopwords and word.text.lower() not in punctuation:
-        if word.text not in word_frequencies.keys():
-            word_frequencies[word.text] = 1
-        else:
-            word_frequencies[word.text] += 1
+## ⚙️ How to Run
+1. Clone the repo
+2. Install requirements: `pip install -r requirements.txt`
+3. Run the notebook or Python file
 
-max_frequency = max(word_frequencies.values())
+## 📁 Files
+- Jupyter notebook for text summarization
+- Sample inputs and generated outputs
 
-# Normalizing word frequencies
-for word in word_frequencies.keys():
-    word_frequencies[word] = word_frequencies[word] / max_frequency
+## 🛠 Technologies
+- Python
+- NLP
+- Hugging Face Transformers
+- Jupyter Notebook
 
-# Sentence Scores
-sentence_tokens = [sent for sent in doc.sents]
-sentence_scores = {}
-for sent in sentence_tokens:
-    for word in sent:
-        if word.text.lower() in word_frequencies.keys():
-            if sent not in sentence_scores.keys():
-                sentence_scores[sent] = word_frequencies[word.text]
-            else:
-                sentence_scores[sent] += word_frequencies[word.text]
+## ✍️ Author
+Your Name
 
-# Summarization
-select_length = int(len(sentence_tokens) * 0.3)
-summary = nlargest(select_length, sentence_scores, key=sentence_scores.get)
-
-final_summary = [word.text for word in summary]
-summary = ' '.join(final_summary)
-
-print("Summary :-", summary)
-
-# Language Translation (Optional)
-translate = input("Do you want to translate the summary? (yes/no): ")
-if translate.lower() == 'yes':
-    translator = Translator()
-    lang = input("Enter the language code (e.g., 'es' for Spanish): ")
-    translated = translator.translate(summary, dest=lang)
-    print("Translated Summary:", translated.text)
+## 📜 License
+MIT License
